@@ -6,6 +6,7 @@
 import {
   readFileSync,
   writeFileSync,
+  appendFileSync,
   existsSync,
   mkdirSync,
   readdirSync,
@@ -279,7 +280,7 @@ const session = await joinSession({
         additionalContext: [
           `[Obsidian Vault] The user has an Obsidian vault at ${VAULT_PATH}.`,
           `Folders:\n${folderList}`,
-          `Tools: vault_read, vault_write, vault_list, vault_search, vault_summary, vault_backlinks, vault_recent, vault_daily, vault_delete, vault_rename.`,
+          `Tools: vault_read, vault_write, vault_append, vault_list, vault_search, vault_summary, vault_backlinks, vault_recent, vault_daily, vault_delete, vault_rename.`,
         ].join("\n"),
       };
     },
@@ -341,6 +342,34 @@ const session = await joinSession({
         }
         const filePath = writeNote(args.folder, args.name, content);
         return `Note written: ${filePath}`;
+      },
+    },
+
+    // ---- vault_append ------------------------------------------------------
+    {
+      name: "vault_append",
+      description:
+        "Append content to an existing note without overwriting it. Creates the note if it doesn't exist. Useful for adding sections, action items, or meeting notes incrementally.",
+      parameters: {
+        type: "object",
+        properties: {
+          folder: { type: "string", description: "Vault folder containing the note." },
+          name: { type: "string", description: "Note name without .md extension." },
+          content: { type: "string", description: "Markdown content to append to the end of the note." },
+        },
+        required: ["folder", "name", "content"],
+      },
+      handler: async (args) => {
+        const filePath = join(VAULT_PATH, args.folder, `${args.name}.md`);
+        if (!existsSync(filePath)) {
+          // Create it
+          const dirPath = join(VAULT_PATH, args.folder);
+          if (!existsSync(dirPath)) mkdirSync(dirPath, { recursive: true });
+          writeFileSync(filePath, args.content, "utf-8");
+          return `Created note with content: ${filePath}`;
+        }
+        appendFileSync(filePath, `\n${args.content}`, "utf-8");
+        return `Appended to: ${filePath}`;
       },
     },
 
