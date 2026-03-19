@@ -1,0 +1,28 @@
+{
+  "vault": "~/ObsidianVaults/MyVault",
+
+  "folders": {
+    "Projects": { "description": "Active projects and initiatives" },
+    "People": { "description": "Contacts, colleagues, stakeholders" },
+    "Meetings": { "description": "Meeting notes and summaries" },
+    "DailyNotes": { "description": "Daily journal entries" },
+    "Topics": { "description": "Subjects, themes, research areas" },
+    "ActionItems": { "description": "Tasks and follow-ups" }
+  },
+
+  "keywords": [
+    "vault", "obsidian", "note", "knowledge",
+    "project", "meeting", "person"
+  ],
+
+  "daily": {
+    "folder": "DailyNotes",
+    "template": "---\ndate: {{date}}\ntags: [daily]\n---\n\n# {{date}}\n\n## Tasks\n\n- [ ] \n\n## Notes\n\n## Reflections\n\n"
+  },
+
+  "templates": {
+    "Meeting": "---\ntype: meeting\ndate: {{date}}\ntags: [meeting]\n---\n\n# {{title}}\n\n## Attendees\n\n## Agenda\n\n## Notes\n\n## Action Items\n\n",
+    "Person": "---\ntype: person\ntags: [person]\n---\n\n# {{title}}\n\n## Role & Context\n\n## Notes\n\n",
+    "Project": "---\ntype: project\nstatus: active\ntags: [project]\n---\n\n# {{title}}\n\n## Overview\n\n## Goals\n\n## Notes\n\n"
+  }
+}
