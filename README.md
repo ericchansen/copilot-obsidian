@@ -99,6 +99,7 @@ If no config file is present, the extension uses environment variables:
 |---|---|
 | `vault_read` | Read a note's full markdown content |
 | `vault_write` | Create or update a note (supports templates, frontmatter, wikilinks) |
+| `vault_append` | Append content to an existing note without overwriting |
 | `vault_list` | List folders in the vault, or notes in a specific folder |
 | `vault_search` | Full-text search with optional frontmatter filters (`type`, `status`, `tags`) |
 | `vault_summary` | Vault overview: folder counts, note counts, wikilink stats |

@@ -1,0 +1,40 @@
+{
+  "name": "copilot-obsidian",
+  "version": "0.2.0",
+  "description": "A GitHub Copilot CLI extension that connects your Obsidian vault to the Copilot agent",
+  "type": "module",
+  "main": "extension.mjs",
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "test": "node --test extension.test.mjs",
+    "check": "npm run lint && npm test"
+  },
+  "keywords": [
+    "obsidian",
+    "copilot",
+    "copilot-cli",
+    "github-copilot",
+    "knowledge-management",
+    "extension",
+    "markdown",
+    "vault",
+    "notes"
+  ],
+  "author": "Eric C. Hansen",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ericchansen/copilot-obsidian.git"
+  },
+  "homepage": "https://github.com/ericchansen/copilot-obsidian",
+  "bugs": {
+    "url": "https://github.com/ericchansen/copilot-obsidian/issues"
+  },
+  "devDependencies": {
+    "eslint": "^9.0.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
