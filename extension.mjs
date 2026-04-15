@@ -556,6 +556,48 @@ const session = await joinSession({
       },
     },
 
+    // ---- vault_lookup ------------------------------------------------------
+    {
+      name: "vault_lookup",
+      description:
+        "Fast lookup across Knowledgebase and Playbooks folders. Returns full note content (not just snippets) for quick reference during calls. Searches by text query across titles and content.",
+      parameters: {
+        type: "object",
+        properties: {
+          query: {
+            type: "string",
+            description: "Search term (e.g. 'quota', 'caching', 'provisioned'). Searched in note titles and content within Knowledgebase/ and Playbooks/ folders.",
+          },
+        },
+        required: ["query"],
+      },
+      handler: async (args) => {
+        const lowerQuery = args.query.toLowerCase();
+        const refFolders = ["Knowledgebase", "Playbooks"];
+        const results = [];
+
+        for (const folder of refFolders) {
+          const notes = listNotes(folder);
+          for (const name of notes) {
+            const content = readNote(folder, name);
+            if (!content) continue;
+            if (
+              name.toLowerCase().includes(lowerQuery) ||
+              content.toLowerCase().includes(lowerQuery)
+            ) {
+              results.push({ folder, name, content });
+            }
+          }
+        }
+
+        if (results.length === 0) return `No matches for "${args.query}" in Knowledgebase or Playbooks.`;
+
+        return results
+          .map((r) => `# ${r.folder}/${r.name}\n\n${r.content}`)
+          .join("\n\n---\n\n");
+      },
+    },
+
     // ---- vault_rename ------------------------------------------------------
     {
       name: "vault_rename",
