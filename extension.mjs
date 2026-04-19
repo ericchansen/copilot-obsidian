@@ -64,17 +64,22 @@ const DAILY_TEMPLATE = CONFIG.daily?.template || "---\ndate: {{date}}\n---\n\n# 
 // Templates from config
 const TEMPLATES = CONFIG.templates || {};
 
+// Folders to exclude from recursive scans (e.g. agent session data, .git)
+const EXCLUDE_DIRS = new Set((CONFIG.exclude || []).map((d) => d.toLowerCase()));
+
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
 
 /** Recursively collect all .md files under a directory.
- *  Returns array of { folder, name, absPath } where folder is relative to vault root. */
+ *  Returns array of { folder, name, absPath } where folder is relative to vault root.
+ *  Skips dotfiles and directories listed in config.exclude. */
 function walkVault(dir = VAULT_PATH, relDir = "") {
   const results = [];
   if (!existsSync(dir)) return results;
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
     if (entry.name.startsWith(".")) continue;
+    if (EXCLUDE_DIRS.has(entry.name.toLowerCase())) continue;
     const abs = join(dir, entry.name);
     const rel = relDir ? `${relDir}/${entry.name}` : entry.name;
     if (entry.isDirectory()) {
@@ -90,11 +95,12 @@ function walkVault(dir = VAULT_PATH, relDir = "") {
   return results;
 }
 
-/** Return all top-level folders in the vault (excluding dotfiles). */
+/** Return all top-level folders in the vault (excluding dotfiles and config.exclude). */
 function listFolders() {
   if (!existsSync(VAULT_PATH)) return [];
   return readdirSync(VAULT_PATH).filter((f) => {
     if (f.startsWith(".")) return false;
+    if (EXCLUDE_DIRS.has(f.toLowerCase())) return false;
     return statSync(join(VAULT_PATH, f)).isDirectory();
   });
 }
